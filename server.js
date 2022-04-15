@@ -5,25 +5,24 @@
 
 // Dependencies
 const http = require('http');
+const url = require('url')
 
 // Create Server...
 const server = http.createServer((req, res)=>{
 
-    if(req.url=== '/'){
+    // Parse the url...
+    const parsedUrl = url.parse(req.url, true);
+
+    if(parsedUrl.pathname=== '/'){
         res.write("This is Base URL");
         res.end()
-    }else if(req.url=== '/about'){
+    }else if(parsedUrl.pathname=== '/about'){
         res.write("This is About Page")
         res.end()
     }else{
         res.write("Nothing Found")
         res.end()
     }
-});
-
-// This Event Will be Fired each Connection
-server.on('connection', (socket)=>{
-console.log('New Connection...')
 });
 
 // Listening To PORT
