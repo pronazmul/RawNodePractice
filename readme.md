@@ -1,6 +1,4 @@
-## Node.js `os` Operating System Module
-The OS module provides information about the computer's operating system.
+## Node.js `path` path Module
+The Path module provides a way of working with directories and file paths.
 
-- While working with os module Requires main Thread becaluse ist's a CPU intensive Task.
-
-<img src='./os module.png' alt = "Os Module" align='center'>
+<img src='./path.png' alt = "PATH Module" align='center'>
