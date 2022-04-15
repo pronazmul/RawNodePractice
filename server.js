@@ -5,20 +5,24 @@
 
 // Dependencies
 const http = require('http');
-const url = require('url')
+const url = require('url');
+const fs = require('fs');
 
 // Create Server...
-const server = http.createServer((req, res)=>{
+const server = http.createServer(async(req, res)=>{
 
     // Parse the url...
     const parsedUrl = url.parse(req.url, true);
 
-    if(parsedUrl.pathname=== '/'){
-        res.write("This is Base URL");
-        res.end()
-    }else if(parsedUrl.pathname=== '/about'){
-        res.write("This is About Page")
-        res.end()
+    if(parsedUrl.pathname=== '/readFile'){
+        fs.readFile('test.txt', (error, data)=>{
+            res.write(data)
+            return res.end()
+        })
+    }else if(parsedUrl.pathname=== '/readFileSync'){
+        let data = fs.readFileSync('test.txt')
+            res.write(data)
+            return res.end()
     }else{
         res.write("Nothing Found")
         res.end()
