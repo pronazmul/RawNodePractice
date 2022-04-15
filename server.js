@@ -1,28 +1,16 @@
 /**
- * Title: OS (Operating System) Module Practice
+ * Title: Events Module Practive 
  * Date: 04-25-2022
  */
 
 // Dependencies
-const http = require('http');
-const path = require('path');
+  var EventEmitter = require('events');
+  var emitter = new EventEmitter();
 
-// Create Server...
-const server = http.createServer((req, res)=>{
-    if(req.url=== '/'){
-        const filename= path.basename(__dirname);
-        const extension = path.extname(__filename);
-        const filepath = path.join(__dirname,'./', 'path.png');
+// Listining And Event:
+  emitter.on('scream', function() {
+    console.log('A scream is detected!');
+  });
 
-        res.write("Your file name is "+filename+"\n");
-        res.write("Your File extension is "+extension+"\n");
-        res.write("Your Image file path is "+filepath+"\n");
-        res.end()
-    }else{
-        res.write("Nothing Found")
-        res.end()
-    }
-});
-
-// Listening To PORT
-server.listen(3000);
+// Event Raised:
+  emitter.emit('scream');
