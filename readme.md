@@ -1,164 +1,38 @@
-## Table of Contents
+## Some Important Concepts About NodeJS:
+JavaScript Was InterPrated Language Before V8 Engine Introducd. V8 has given JavaScript Superpowe Like JIT (Just In Time) Compilation.
 
-- [Update Node](#update-node)
-  - [Windows](#windows)
-  - [Mac](#mac)
-- [Install and Update Yarn](#install-and-update-yarn)
-  - [Windows](#on-windows)
-  - [Mac](#on-mac)
-- [VS Code Editor Setup](#vs-code-editor-setup)
-  - [Extensions](#extensions)
-  - [Settings](#settings)
-  - [Set Line Breaks](#set-line-breaks)
-- [Linting Setup](#linting-setup)
-  - [Install Dev Dependencies](#install-dev-dependencies)
-  - [Setup Linting Configuration file](#setup-linting-configuration-file)
-- [Contact](#contact)
+- How It Works
+  - Sigle Threaded
+  - Asynchronously
+  - NoN Blocking I/O
 
-<!-- UPDATE NODE -->
+## How Works Behind The Schene: 
 
-## Update Node
+- `CPU INtencive Tasks`: As we know Whenever Someone Requested on Server than a thread Recieves the task. If it's like calculative Than thread has to manage it as node js has only one thread so it's block other request. That's why it's said that nodejs is not good for CPU Intensive Task.
 
-Please follow the below instructions to update node in your machine:
+- `I/O Intencive Tasks`: If it's like Have to Collect data from another database/server or work with file system than it's Known as `I/O (Input Output)` Intensive Tasks, Just pass the taks to a worker. NodeJs is switable for this because it has multiple workers Main thread never be engaged It's free always to receive any request. 
 
-### Windows
+- `Single Threaded`: Node JS has only one thread But Multiple workers It's perfect for I/O intensive Tasks but not Switable for CPU Intensive Tasks. 
 
-1. Update npm
-   ```sh
-   npm install npm@latest -g
-   ```
-2. Clear npm cache
-   ```sh
-   npm cache clean -f
-   ```
-3. Install n
-   ```sh
-   npm install -g n
-   ```
-4. Update node to latest version
-   ```sh
-   n latest
-   ```
+- `What are Workers`: NodeJS uses a librery `liveUp` which Specially Designed for NodeJs but uses multile places. Behind the schene This Library uses Operating System Karnel and karnel has lot of threads. So Nodejs workers are System Threads. 
 
-### Mac
+## Global Obejct and Module System: 
 
-1. With Homebrew
-   ```sh
-   brew update
-   brew upgrade node
-   ```
+- `Global Object`: Node Js has no window object, Because window object has designed for only brwser. Node Js Has not nacesity using window object. It has Similer one named `global` with limited number of properties like `timeout`, `interval`. Other important thing any variable on node js never hoisted on global object.
 
-<!-- INSTALL & UPDATE YARN -->
 
-## Install and Update yarn
+- `Modular System`: In Node Js Each JS file is module and it's incapsulated no data will be exposed if you not export module. On Client side wite multiple js file include all files in a file than all togather creates a single file, there name convension is important and may be conflicted. NodeJs Behind the Schene Uses Vanilla JS IFEE concepts, Each file is incapsulated by IFEE invisibally. And Most Important thing By default it get some parameter `exports, require, module, __filename, __dirname` By default Module export an empty obejct. There Are Three types of module. 
+  - Nodejs Build in Module `const path = require('path')`
+  - User Defined Module `const customModule = require('./fileName')`
+  - Third Perty Module `const express = require('express')`
 
-Please follow the below instructions to install or update yarn in your machine.
 
-### On Windows
 
-1. Install yarn
-   ```sh
-   npm install -g yarn
-   ```
-2. Update yarn
-   ```sh
-   yarn set version latest
-   ```
 
-### On Mac
 
-1. Install yarn
-   ```sh
-   brew install yarn
-   ```
-2. Update yarn
-   ```sh
-   brew update
-   brew upgrade yarn
-   ```
 
-<!-- EDITOR SETUP -->
 
-## VS Code Editor Setup
 
-In order to follow along the tutorial series, I recommend you to use Visual Studio Code Editor and install & apply the below extensions and settings.
 
-### Extensions
 
-Install the below extensions:
 
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [Path Autocomplete](https://marketplace.visualstudio.com/items?itemName=ionutvmi.path-autocomplete)
-
-### Settings
-
-Go to your Visual Stuido Code `settings.json` file and add the below settings there:
-
-```json
-// config related to code formatting
-"editor.defaultFormatter": "esbenp.prettier-vscode",
-"editor.formatOnSave": true,
-"[javascript]": {
-  "editor.formatOnSave": false,
-  "editor.defaultFormatter": null
-},
-"editor.codeActionsOnSave": {
-  "source.fixAll.eslint": true,
-  "source.organizeImports": true
-},
-"eslint.alwaysShowStatus": true
-```
-
-### Set Line Breaks
-
-Make sure in your VS Code Editor, "LF" is selected as line feed instead of CRLF (Carriage return and line feed). To do that, just click LF/CRLF in bottom right corner of editor, click it and change it to "LF". If you dont do that, you will get errors in my setup.
-
-<img src="images/line-feed.jpg" alt="Line Feed" width="700">
-
-<!-- LINTING SETUP -->
-
-## Linting Setup
-
-In order to lint and format your code automatically according to popular airbnb style guide, I recommend you to follow the instructions as described in video. References are as below.
-
-### Install Dev Dependencies
-
-```sh
-yarn add -D eslint prettier
-npx install-peerdeps --dev eslint-config-airbnb-base
-yarn add -D eslint-config-prettier eslint-plugin-prettier
-```
-
-### Setup Linting Configuration file
-
-Create a `.eslintrc.json` file in the project root and enter the below contents:
-
-```json
-{
-  "extends": ["prettier", "airbnb-base"],
-  "parserOptions": {
-    "ecmaVersion": 12
-  },
-  "env": {
-    "commonjs": true,
-    "node": true
-  },
-  "rules": {
-    "no-console": 0,
-    "indent": 0,
-    "linebreak-style": 0,
-    "prettier/prettier": [
-      "error",
-      {
-        "trailingComma": "es5",
-        "singleQuote": true,
-        "printWidth": 100,
-        "tabWidth": 4,
-        "semi": true
-      }
-    ]
-  },
-  "plugins": ["prettier"]
-}
-```
