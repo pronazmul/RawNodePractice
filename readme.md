@@ -1,18 +1,6 @@
-## Node.js URL Module
+## Node.js `os` Operating System Module
+The OS module provides information about the computer's operating system.
 
-- Like other module it has many methods. To include the URL module, use the require() method:
+- While working with os module Requires main Thread becaluse ist's a CPU intensive Task.
 
-  - Parse an address with the `url.parse()` method, and it will return a URL object with each part of the address as properties:
-
-```js
-var url = require('url');
-var adr = 'http://localhost:8080/default.htm?year=2017&month=february';
-var q = url.parse(adr, true);
-
-console.log(q.host); //returns 'localhost:8080'
-console.log(q.pathname); //returns '/default.htm'
-console.log(q.search); //returns '?year=2017&month=february'
-
-var qdata = q.query; //returns an object: { year: 2017, month: 'february' }
-console.log(qdata.month); //returns 'february'
-```
+<img src='./os module.png' alt = "Os Module" align='center'>
