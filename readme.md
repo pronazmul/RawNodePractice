@@ -1,57 +1,125 @@
-## Node.js `events` Module
-Working with events module is pretty complex. it's not like any other module in nodejs. It's Gives us a Class So have to make a object blueprint using that class and object gives some methods By Which can work through it.
+## Node JS Stream and Buffer
+- Buffer is a binary data type. Data flow over node js like receive data from http request or read data from a file all are happend by Buffer. Buffer Consist of a number from small part. This process is known as stream.
 
--  The syntax for including the Events module, and creating an EventEmitter in your application:
-  - One Thing need to know as order listener must have to be before emitter. 
+- It Performs well while processing a big data. Pass data chunk by chunk user dosen't need to wait can get small pice of data smoothly. Parfect example is youtube It dosen't provide a video at a glance load the video by Buffer. Wenever we pull the video it shows loading sign that means it wait's for the Buffer. 
+
+
+-  Read File Data as Buffer
+  - data listener read data chunk by chunk and end listener confirms data read finished.
 
 ```js
-  var EventEmitter = require('events');
-  var emitter = new EventEmitter();
+const fs = require('fs')
 
-// Listining And Event:
-  emitter.on('scream', function() {
-    console.log('A scream is detected!');
-  });
+// Create a read stream
+const readStream = fs.createReadStream(__dirname + '/read.txt');
 
-// Event Raised:
-  emitter.emit('scream');
+//Listen to data event
+readStream.on('data',(chunk)=>{
+    console.log(chunk.toString())
+})
+
+//Listen to end event
+readStream.on('end',()=>{
+    console.log('Read stream closed')
+})
+
 ```
 
-- `Events Emits form Different Modules`:  Whenever Trying to emit events form different module may think just require and make an instance but don't worry it will not work. Think abou Class Core concepts like class is a blueprint of object when creating new obejcts form class each object is different form others. So working together somehow have to make a connection between emitter and listener. Make a different class which will extends emitter and export class instance. 
+
+-  Write Data as Buffer
+  - There has another cool method `.pipe()` We can simply pass the writable Stream inside it. 
 
 ```js
-//Custom Class
-const EventEmitter = require('events')
+const fs = require('fs')
 
-class School extends EventEmitter {
-     start(){
-        console.log("Class Started")
-        setTimeout(() => {
-        this.emit('classSes','Class is Finished, Teacher go back' )
-        },3000)        
+// Create a read stream
+const readStream = fs.createReadStream(__dirname + '/read.txt');
+//Listen to data event
+const writeStream = fs.createWriteStream(__dirname + '/write.txt');
+
+//Listen to data event
+// readStream.on('data',(chunk)=>{
+//         writeStream.write(chunk)
+// })
+
+// Another Way to Write
+readStream.pipe(writeStream)
+
+//Listen to end event
+readStream.on('end',()=>{
+    console.log('Write stream closed')
+})
+
+```
+
+-  Receive Data As HTTP Req body As Buffer
+  - NOTE `req is a readable stream we Read data using on listener`
+
+```js
+const http = require('http')
+const fs = require('fs')
+
+const server = http.createServer((req, res) => {
+
+    if(req.url==='/'){
+        res.write(`
+        <html>
+            <head>
+                <title>Write Here</title>   
+            </head>
+        <body>
+        `)
+
+        res.write(`
+            <form action='/process' method='post'>
+                <input type="text" name="data" placeholder="Pass Data Here"/>
+            </form>
+        <body>
+        </html>`)
+        return res.end()
+    }else if(req.url==='/process' && req.method==='POST'){
+        let body = []
+        // Recieve Buffer Chunk by Chunk and push it to an array, Req is a readable stream
+        req.on('data', (chunk) => body.push(chunk))
+
+        // When all the data is recieved Make All Buffer Chunks to a String
+        req.on('end', () => {
+            console.log("Data Recived Done")
+            body = Buffer.concat(body).toString()
+
+            res.write(body)
+            return res.end()
+        })
+    }else{
+        res.write('Not Found')
+        return res.end()
     }
-}
+})
 
-module.exports = School
+server.listen(5000)
+
 ```
 
+
+-  Pass Data As HTTP Response body As Buffer
+  - NOTE `res is a writable stream we can use pipe() method on it`
 
 ```js
-//Raise And Listen Events using that Class
+const http = require('http')
+const fs = require('fs')
 
-const School = require('./eventClass')
-const school = new School()
+const server = http.createServer((req, res) => {
 
-// Listening And Event:
-school.on('classSes', function(data) {
-  console.log(data);
-});
-
-
-// Event Raised:    
-school.start()
+if(req.url==='/read'){
+        let readStream = fs.createReadStream('./read.txt', 'utf8')
+        //Write Stream as a response, response is a writable stream
+        readStream.pipe(res)
+    }else{
+        res.write('Not Found')
+        return res.end()
+    }
+})
+server.listen(5000)
 
 ```
 
-
-<img src='./events.png' alt = "Events Module" align='center'>
